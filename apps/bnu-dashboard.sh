@@ -3,7 +3,7 @@
 set -Eeuo pipefail
 
 APP_NAME="BNU Dashboard"
-VERSION="1.0.0"
+VERSION="1.1.0"
 
 pause() {
   printf '\nPress Enter to return to the menu...'
@@ -22,6 +22,11 @@ show_system() {
   printf 'System information\n'
   printf '%s\n' '------------------'
   printf 'OS: %s\n' "${OSTYPE:-unknown}"
+  if [[ -r /etc/os-release ]]; then
+    . /etc/os-release
+    printf 'Distribution: %s\n' "${PRETTY_NAME:-unknown}"
+    printf 'Environment: GNU/Linux\n'
+  fi
   printf 'Kernel: '
   if command -v uname >/dev/null 2>&1; then uname -srmo; else printf 'uname unavailable\n'; fi
   printf 'User: %s\n' "${USER:-unknown}"
