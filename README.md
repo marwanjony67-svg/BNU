@@ -15,7 +15,7 @@ BNU is a small, cross-platform command-line toolkit for the BudgieOS project. It
 | `bnu process` | Show this BNU process ID |
 | `bnu update` | Explain the planned update workflow |
 
-## BudgieOSMaker — generate an OS kernel starter
+## BNU Dashboard — Bash terminal app\n\nRun the interactive, read-only Bash dashboard from the repository root:\n\n```sh\nchmod +x apps/bnu-dashboard.sh\n./apps/bnu-dashboard.sh\n```\n\nThe menu shows system details, available memory information, directory listings, and the app process ID. It is a Bash app and does not change system settings or delete files. Requires Bash; some information depends on the host operating system.\n\n## BudgieOSMaker — generate an OS kernel starter
 
 From the BNU repository root:
 
