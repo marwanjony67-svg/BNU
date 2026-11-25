@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
+#include <fstream>
+#include <cstdlib>
 #include <stdexcept>
 #include <system_error>
 
@@ -51,6 +53,42 @@ void show_sysinfo() {
               << "Platform: " << platform_name() << "\n"
               << "Architecture: " << architecture_name() << "\n"
               << "C++ standard: C++17\n";
+}
+
+
+void show_linux_info() {
+#if defined(__linux__)
+    std::cout << "GNU/Linux environment (Linux kernel)\\n";
+    std::ifstream input("/etc/os-release");
+    std::string line;
+    bool found = false;
+    while (std::getline(input, line)) {
+        if (line.rfind("PRETTY_NAME=", 0) == 0) {
+            std::string value = line.substr(12);
+            if (value.size() >= 2 && value.front() == '"' && value.back() == '"')
+                value = value.substr(1, value.size() - 2);
+            std::cout << "Distribution: " << value << "\\n";
+            found = true;
+            break;
+        }
+    }
+    if (!found) std::cout << "Distribution: unknown\\n";
+    const char* managers[] = {"apt", "dnf", "yum", "pacman", "zypper", "apk", "xbps-install", "emerge"};
+    std::cout << "Package managers detected: ";
+    bool first = true;
+    for (const char* manager : managers) {
+        const std::string probe = std::string("command -v ") + manager + " >/dev/null 2>&1";
+        if (std::system(probe.c_str()) == 0) {
+            if (!first) std::cout << ", ";
+            std::cout << manager;
+            first = false;
+        }
+    }
+    if (first) std::cout << "none detected";
+    std::cout << "\\n";
+#else
+    std::cout << "This command is available on Linux builds of BNU only.\\n";
+#endif
 }
 
 void show_memory() {
