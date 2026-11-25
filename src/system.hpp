@@ -4,6 +4,7 @@
 
 namespace bnu {
 void show_sysinfo();
+void show_linux_info();
 void show_memory();
 void list_files(const std::string& path);
 void show_process();
