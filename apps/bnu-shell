@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# BNU Shell - a simple interactive Bash frontend for BudgieOS Native Utilities.
+set -euo pipefail
+
+find_bnu() {
+  if [[ -n "${BNU_BIN:-}" && -x "${BNU_BIN}" ]]; then
+    printf '%s\n' "$BNU_BIN"
+  elif command -v bnu >/dev/null 2>&1; then
+    command -v bnu
+  elif [[ -x "./build/bnu" ]]; then
+    printf '%s\n' "./build/bnu"
+  elif [[ -x "../build/bnu" ]]; then
+    printf '%s\n' "../build/bnu"
+  else
+    return 1
+  fi
+}
+
+if ! BNU="$(find_bnu)"; then
+  printf 'BNU executable not found. Build BNU first or set BNU_BIN.\n' >&2
+  exit 1
+fi
+
+clear_screen() {
+  if [[ -t 1 ]]; then clear; fi
+}
+
+show_menu() {
+  printf '\n'
+  printf '  BNU Shell - BudgieOS Native Utilities\n'
+  printf '  --------------------------------------\n'
+  printf '  1) System information\n'
+  printf '  2) Memory information\n'
+  printf '  3) List files\n'
+  printf '  4) Process information\n'
+  printf '  5) Update information\n'
+  printf '  6) BNU help\n'
+  printf '  7) Clear screen\n'
+  printf '  0) Exit\n'
+  printf '\n'
+}
+
+while true; do
+  show_menu
+  read -r -p 'bnu-shell> ' choice || { printf '\n'; break; }
+
+  case "$choice" in
+    1) "$BNU" sysinfo ;;
+    2) "$BNU" memory ;;
+    3)
+      read -r -p 'Directory (blank = current): ' target
+      if [[ -n "$target" ]]; then
+        "$BNU" files "$target"
+      else
+        "$BNU" files
+      fi
+      ;;
+    4) "$BNU" process ;;
+    5) "$BNU" update ;;
+    6) "$BNU" help ;;
+    7) clear_screen ;;
+    0|q|quit|exit) printf 'Goodbye from BNU Shell.\n'; break ;;
+    *) printf 'Unknown option. Enter 0-7.\n' ;;
+  esac
+done
