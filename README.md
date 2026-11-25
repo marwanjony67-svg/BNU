@@ -1,10 +1,10 @@
 # BNU — BudgieOS Native Utilities
 
-BNU is a small, cross-platform command-line toolkit for the BudgieOS project. It is written in C++17 and is designed as a practical starter project for native system utilities.
+BNU is a small, cross-platform command-line toolkit for the BudgieOS project. It is written in C++17 and includes **BudgieOSMaker**, a generator for a minimal bare-metal kernel starter using Assembly, C, and C++.
 
-> **Status:** early development. BNU is a user-space utility toolkit, not an operating-system kernel.
+> **Status:** early development. BNU is a user-space utility toolkit; BudgieOSMaker generates a separate experimental kernel project.
 
-## Commands
+## BNU commands
 
 | Command | Purpose |
 |---|---|
@@ -15,7 +15,30 @@ BNU is a small, cross-platform command-line toolkit for the BudgieOS project. It
 | `bnu process` | Show this BNU process ID |
 | `bnu update` | Explain the planned update workflow |
 
-## Build
+## BudgieOSMaker — generate an OS kernel starter
+
+From the BNU repository root:
+
+```sh
+chmod +x tools/budgieosmaker
+./tools/budgieosmaker BudgieOS-OS
+cd BudgieOS-OS
+make check-tools
+make
+make iso
+```
+
+The generator creates:
+- `kernel/boot.S` — Multiboot2 assembly entry and stack
+- `kernel/kernel.c` — freestanding C kernel entry and VGA text output
+- `kernel/kernel.cpp` — C++ kernel initialization hook
+- `linker.ld` — kernel linker layout
+- `boot/grub/grub.cfg` — GRUB boot menu
+- `Makefile` — cross-compile and ISO build targets
+
+**Toolchain:** `i686-elf-gcc`, `i686-elf-g++`, GNU Make, GRUB utilities, and `xorriso`. The generated starter targets 32-bit x86 Multiboot2 and is intended for emulator testing. It is not a complete OS and does not yet provide drivers, storage, networking, or userspace.
+
+## Build BNU itself
 
 ### Linux / macOS / compatible POSIX shell
 
@@ -38,17 +61,6 @@ bnu.exe help
 cmake -S . -B build-cmake
 cmake --build build-cmake --config Release
 ```
-
-## Project layout
-
-- `src/` — application source
-- `scripts/` — build helper scripts
-- `CMakeLists.txt` — CMake build definition
-- `Makefile` — Make build definition
-
-## Safety and scope
-
-BNU currently reports basic information and lists directories only. It does not modify system settings, terminate processes, install software, or perform privileged operations. The `update` command is informational and does not download or execute anything.
 
 ## License
 
