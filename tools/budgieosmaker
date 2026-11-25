@@ -53,7 +53,7 @@ static uint16_t cursor = 0;
 
 static void write_text(const char *text, uint8_t color) {
     while (*text && cursor < 80 * 25) {
-        if (*text == '\\n') {
+        if (*text == '\n') {
             cursor = (uint16_t)(((cursor / 80) + 1) * 80);
         } else {
             VGA[cursor++] = (uint16_t)text[0] | ((uint16_t)color << 8);
@@ -68,7 +68,7 @@ void kernel_main(void) {
     }
     cursor = 0;
     write_text("BudgieOS kernel booted!", 0x0A);
-    write_text("\\nASM + C + C++ kernel starter", 0x0F);
+    write_text("\nASM + C + C++ kernel starter", 0x0F);
     kernel_cpp_init();
     for (;;) {
         __asm__ volatile ("hlt");
