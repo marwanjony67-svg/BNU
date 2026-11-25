@@ -12,6 +12,7 @@ void print_help() {
         << "Commands:\n"
         << "  help             Show this help message\n"
         << "  sysinfo          Show operating-system information\n"
+        << "  linux            Show GNU/Linux distribution and tools\n"
         << "  memory           Show physical memory information\n"
         << "  files [PATH]     List a directory (default: current directory)\n"
         << "  process          Show the current BNU process ID\n"
@@ -28,7 +29,9 @@ int main(int argc, char* argv[]) {
         }
 
         const std::string command = argv[1];
-        if (command == "sysinfo") {
+        if (command == "linux") {
+            bnu::show_linux_info();
+        } else if (command == "sysinfo") {
             bnu::show_sysinfo();
         } else if (command == "memory") {
             bnu::show_memory();
